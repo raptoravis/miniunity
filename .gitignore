@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+Temp/
+
+Library/ShaderCache/
+Library/Artifacts/
+Library/PackageCache/
+#Library/ScriptAssemblies/
+Library/assetDatabase3
