@@ -33,8 +33,6 @@
 
 Temp/
 
-Library/ShaderCache/
-Library/Artifacts/
-Library/PackageCache/
-#Library/ScriptAssemblies/
-Library/assetDatabase3
+Library/
+
+Assets/HoudiniEngineAssetCache*
