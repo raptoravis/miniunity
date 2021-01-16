@@ -10,7 +10,7 @@
 		Tags { "RenderType"="Opaque" }
 		LOD 200
 
-		Pass {
+			Pass {
 
 			Cull Front
 			Lighting Off
@@ -18,63 +18,61 @@
 			Tags { "LightMode"="ForwardBase" }
 
 			CGPROGRAM
-	#pragma vertex vert
-	#pragma fragment frag
+#pragma vertex vert
+#pragma fragment frag
 
-	#include "UnityCG.cginc"
+#include "UnityCG.cginc"
 
 			struct a2v {
-				float4 vertex : POSITION;
-				float3 normal : NORMAL;
-				float3 tangent : TANGENT;
-			};
+			float4 vertex : POSITION;
+			float3 normal : NORMAL;
+			float3 tangent : TANGENT;
+		};
 
-			struct v2f {
-				float4 pos : POSITION;
-			};
+		struct v2f {
+			float4 pos : POSITION;
+		};
 
-			float _Outline;
+		float _Outline;
 
-			v2f vert (a2v v) {
-				v2f o;
-				// to view space
-				float4 pos = mul( UNITY_MATRIX_MV, v.vertex);
-				float3 normal = mul( (float3x3)UNITY_MATRIX_IT_MV, v.normal);
-				normal.z = -0.4;
-				pos = pos + float4(normalize(normal),0) * _Outline;
-				o.pos = mul(UNITY_MATRIX_P, pos);
+		v2f vert (a2v v) {
+			v2f o;
+			// to view space
+			float4 pos = mul( UNITY_MATRIX_MV, v.vertex);
+			float3 normal = mul( (float3x3)UNITY_MATRIX_IT_MV, v.normal);
+			normal.z = -0.4;
+			pos = pos + float4(normalize(normal),0) * _Outline;
+			o.pos = mul(UNITY_MATRIX_P, pos);
 
-				return o;
-			}
+			return o;
+		}
 
-			float4 frag (v2f IN) : COLOR{
-				return float(1);
-			}
+		float4 frag (v2f IN) : COLOR{
+			return float(0);
+		}
 
 			ENDCG
 		}
 
-		Pass {
 
+		Pass {
 			Cull Back
 			Lighting On
 			Tags { "LightMode"="ForwardBase" }
 
 			CGPROGRAM
-	// Upgrade NOTE: excluded shader from DX11; has structs without semantics (struct v2f members lightDirection)
-	#pragma exclude_renderers d3d11
 	#pragma vertex vert
 	#pragma fragment frag
 
 	#include "UnityCG.cginc"
-			//uniform float4 _LightColor0;
+			uniform float4 _LightColor0;
 
 			sampler2D _MainTex;
 			sampler2D _Bump;
 			sampler2D _Ramp;
 
-			//float4 _MainTex_ST;
-			//float4 _Bump_ST;
+			float4 _MainTex_ST;
+			float4 _Bump_ST;
 
 			float _Tooniness;
 			float _ColorMerge;
@@ -90,7 +88,7 @@
 				float4 pos : POSITION;
 				float2 uv : TEXCOORD0;
 				float2 uv2 : TEXCOORD1;
-				float3 lightDirection;
+				float3 lightDirection: TEXCOORD2;
 			};
 
 			v2f vert (a2v v) {
@@ -117,8 +115,8 @@
 				float3 n = UnpackNormal(tex2D (_Bump, i.uv2));
 
 				//Based on the ambient light
-				//float3 lightColor = UNITY_LIGHTMODEL_AMBIENT.xyz;
-				float3 lightColor = float3(0.2,0.2,0.2);
+				float3 lightColor = UNITY_LIGHTMODEL_AMBIENT.xyz;
+				//float3 lightColor = float3(0.2,0.2,0.2);
 
 				//Work out this distance of the light
 				float lengthSq = dot(i.lightDirection, i.lightDirection);
@@ -133,8 +131,7 @@
 				//Product the final color
 				c.rgb = lightColor * c.rgb * 2;
 
-				//return c;
-				return float4(0.8, 0.8, 0.8, 1)
+				return c;
 			}
 			ENDCG
 		}
