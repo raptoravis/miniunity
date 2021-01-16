@@ -10,7 +10,7 @@
 		Tags { "RenderType"="Opaque" }
 		LOD 200
 
-			Pass {
+		Pass {
 
 			Cull Front
 			Lighting Off
@@ -24,32 +24,38 @@
 #include "UnityCG.cginc"
 
 			struct a2v {
-			float4 vertex : POSITION;
-			float3 normal : NORMAL;
-			float3 tangent : TANGENT;
-		};
+				float4 vertex : POSITION;
+				float3 normal : NORMAL;
+				float3 tangent : TANGENT;
+			};
 
-		struct v2f {
-			float4 pos : POSITION;
-		};
+			struct v2f {
+				float4 pos : POSITION;
+			};
 
-		float _Outline;
+			float _Outline;
 
-		v2f vert (a2v v) {
-			v2f o;
-			// to view space
-			float4 pos = mul( UNITY_MATRIX_MV, v.vertex);
-			float3 normal = mul( (float3x3)UNITY_MATRIX_IT_MV, v.normal);
-			normal.z = -0.4;
-			pos = pos + float4(normalize(normal),0) * _Outline;
-			o.pos = mul(UNITY_MATRIX_P, pos);
+			v2f vert (a2v v) {
+				v2f o;
+				
+				// to view space
+				float4 pos = mul( UNITY_MATRIX_MV, v.vertex);
+				float3 normal = mul( (float3x3)UNITY_MATRIX_IT_MV, v.normal);
 
-			return o;
-		}
+				// flat it
+				normal.z = -0.4;
 
-		float4 frag (v2f IN) : COLOR{
-			return float(0);
-		}
+				// bigger
+				pos = pos + float4(normalize(normal),0) * _Outline;
+				o.pos = mul(UNITY_MATRIX_P, pos);
+
+				return o;
+			}
+
+			float4 frag (v2f IN) : COLOR{
+				// outline color
+				return float(0);
+			}
 
 			ENDCG
 		}
