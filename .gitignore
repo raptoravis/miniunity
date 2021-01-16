@@ -36,3 +36,7 @@ Temp/
 Library/
 
 Assets/HoudiniEngineAssetCache*
+/.vs/miniunity.git/v15
+/*.csproj
+/obj/Debug
+/*.sln
